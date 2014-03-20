@@ -1,0 +1,33 @@
+<h1>Maps#index</h1>
+<p>Find me in app/views/maps/index.html.erb</p>
+
+
+
+
+<div style='width: 800px;'>
+  <div id="poop" style='width: 800px; height: 400px;'></div>
+</div>
+
+
+<script type="text/javascript">
+handler = Gmaps.build('Google');
+handler.buildMap({ provider: { auto_zoom: true, zoom: 21, type: 'satellite'}, internal: {id: 'poop'}}, function(){
+  markers = handler.addMarkers([
+    {
+      lat: 26.555480,
+      lng: -80.075526,
+      picture: {
+        width:  36,
+        height: 36,
+      },
+      infowindow: "hello!",
+      maptype: 'satellite'
+ 
+    }
+  ]);
+
+
+});
+handler.map.centerOn({ lat: 26.555480, lng: -80.075526 })
+</script>
+<p> hello<p>
