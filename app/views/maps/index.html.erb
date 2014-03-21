@@ -48,21 +48,13 @@ function initialize() {
 
 	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
     console.log('HI THERE')
-		$.each(event.overlay.getPaths().getArray()[0].getArray(), function(key,latlng){
-          my_longlat_array.push([latlng.lat, latlng.lng]);
-        });
+    shapeArr = []
+    event.overlay.getPath().forEach(function(latLng){shapeArr.push(latLng.toString());})
 
-    console.log(my_longlat_array);
+    slarr = shapeArr.toString()
+    console.log(shapeArr);
     console.log("poop");
- /*   $.ajax({
-      type: "POST",
-      url: "http://localhost:55555/maps/",
-      data: { latlong: my_longlat_array} ,
-      success: function(){
-        $("#results").html("Hi FROGS for PK");
-    }
-    }); */
-  $.post( "http://localhost:55555/maps/", { 'poop': my_longlat_array} );
+    $.post("/maps/new.js",slarr,"json");
   });
 
 }
