@@ -3,6 +3,10 @@ class MapsController < ApplicationController
   end
 
   def create
+    p params
+    respond_to do |format|
+      format.js {}
+    end
   end
 
   def update

@@ -7,12 +7,15 @@
 <div style='width: 800px;'>
   <div id="poop" style='width: 800px; height: 400px;'></div>
 </div>
+<%= button_to "Push Me", "maps/create", :method=>:post %>
+<div id="results"></div>
 
 <script>
 function initialize() {
   var mapOptions = {
     center: new google.maps.LatLng(26.555480, -80.075526),
-    zoom: 21
+    zoom: 21,
+    mapTypeId: google.maps.MapTypeId.SATELLITE
   };
 
   var map = new google.maps.Map(document.getElementById('poop'),
@@ -31,9 +34,6 @@ function initialize() {
         google.maps.drawing.OverlayType.RECTANGLE
       ]
     },
-    markerOptions: {
-      icon: 'images/beachflag.png'
-    },
     circleOptions: {
       fillColor: '#ffff00',
       fillOpacity: 1,
@@ -44,8 +44,30 @@ function initialize() {
     }
   });
   drawingManager.setMap(map);
-}
+  var my_longlat_array = new Array();
 
+	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+    console.log('HI THERE')
+		$.each(event.overlay.getPaths().getArray()[0].getArray(), function(key,latlng){
+          my_longlat_array.push([latlng.lat, latlng.lng]);
+        });
+
+    console.log(my_longlat_array);
+    console.log("poop");
+ /*   $.ajax({
+      type: "POST",
+      url: "http://localhost:55555/maps/",
+      data: { latlong: my_longlat_array} ,
+      success: function(){
+        $("#results").html("Hi FROGS for PK");
+    }
+    }); */
+  $.post( "http://localhost:55555/maps/", { 'poop': my_longlat_array} );
+  });
+
+}
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
 </script>
 <p> hello<p>

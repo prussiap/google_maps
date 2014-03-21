@@ -1,31 +1,4 @@
 GoogleApi::Application.routes.draw do
-  get "maps/new"
-
-  get "maps/create"
-
-  get "maps/update"
-
-  get "maps/edit"
-
-  get "maps/destroy"
-
-  get "maps/index"
-
-  get "maps/show"
-
-  get "blah/new"
-
-  get "blah/create"
-
-  get "blah/update"
-
-  get "blah/edit"
-
-  get "blah/destroy"
-
-  get "blah/index"
-
-  get "blah/show"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -40,7 +13,12 @@ GoogleApi::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  get '/' => "maps#index"
+  # post '/maps' => "maps#create", as: 'maps_create'
+  # get '/maps' => "maps#index"
+  # get '/maps/show' => "maps#show", as: 'maps_show'
+
+  resources :maps
+
   # Sample resource route with options:
   #   resources :products do
   #     member do
