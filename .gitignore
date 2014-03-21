@@ -1,0 +1,54 @@
+# log
+config/database.yml
+
+.bundle
+db/*.sqlite3
+log/*
+tmp/**/*
+# Rails
+.bundle
+db/*.sqlite3
+db/*.sqlite3-journal
+*.log
+tmp/**/*
+
+# Documentation
+doc/api
+doc/app
+doc/*
+.yardoc
+.yardopts
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Vim
+*.swp
+*.swo
+
+# RubyMine
+.idea
+
+# Backup
+*~
+
+# sass
+.sass-cache
+.sass-cache/*
+
+#rvm
+.rvmrc
+.rvmrc.*
+
+.vagrant
+
+.env
+
+# ERD pdf files
+erd.pdf
+
+# simplecov output
+coverage
