@@ -2,12 +2,17 @@ class MapsController < ApplicationController
   respond_to :json
 
   def new
-    puts params
+    puts params['klag']
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def create
-    p params
+    puts params['klag']
     respond_to do |format|
+      format.html
       format.js
     end
   end
