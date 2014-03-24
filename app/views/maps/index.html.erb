@@ -61,7 +61,7 @@ function initialize() {
     shapeArr = []
     event.overlay.getPath().forEach(function(latLng){shapeArr.push(latLng.toString())})
 
-    slarr = {'points':shapeArr,'name':layerName}
+    slarr = {points:shapeArr,name:layerName}
     shapes.push(slarr)
     console.log(JSON.stringify(shapes));
     $("#results").text(JSON.stringify(shapes));
@@ -73,7 +73,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 $( "#launcherator" ).submit(function( event ) {
   alert('it work')
-  $.post("/maps.js",{klag:JSON.stringify(shapes)},"json");
+  $.post("/maps.js",{klag:shapes},"json");
 });
 
 
