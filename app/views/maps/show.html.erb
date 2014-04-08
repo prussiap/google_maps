@@ -1,2 +1,12 @@
-<h1>Maps#show</h1>
-<p>Find me in app/views/maps/show.html.erb</p>
+<h1>PLACE FOR MAPPINGKS</h1>
+
+<% if @polystr %>
+  IT WAS FROG
+  <%= content_tag :div, class: "include_information", data: {included: @polystr.coords} do %>
+  <% end %>
+  <%= content_tag :div, class: "exclude_information", data: {excluded: @polystr.exclusions} do %>
+  <% end %>
+<% end %>
+
+<%= render :partial => 'pagecontents' %>
+<p> hello<p>
