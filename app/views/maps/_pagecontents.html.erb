@@ -73,61 +73,46 @@ function initialize() {
   });
   drawingManager.setMap(map);
 
+  function getXdistance(point, origin) {
+    b = new google.maps.LatLng(origin.lat(), point.lng())
+    return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
+  }
 
-  // shapes.forEach(function(shape) {
-  //   console.log(shape)
-  //   console.log('incShp')
-  //   shapeCoords = []
-  //   shape.forEach(function(coord) {
-  //     shapeCoords.push(new google.maps.LatLng(coord[0],coord[1]))
-  //   })
+  function getYdistance(point, origin) {
+    b = new google.maps.LatLng(point.lat(), origin.lng())
+    return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
+  }
 
-  //   // Construct the polygon.
-  //   includedDraw = new google.maps.Polygon({
-  //     paths: shapeCoords,
-  //     editable: true,
-  //     strokeWeight: 1,
-  //     fillColor: '#ffff00',
-  //     fillOpacity: 0.15
-  //   });
+  function pointCoords(point, origin) {
+    x = getXdistance(point, origin)
+    y = getYdistance(point, origin)
+    return [x, y]
+  }
 
-  //   includedDraw.setMap(map);
+  function boundsXDist(bounds) {
+    origin = bounds.getSouthWest()
+    b = new google.maps.LatLng(bounds.getSouthWest().ob, bounds.getNorthEast().pb)
+    return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
+  }
 
-  // })
+  function boundsYDist(bounds) {
+    origin = bounds.getSouthWest()
+    b = new google.maps.LatLng(bounds.getNorthEast().ob, bounds.getSouthWest().pb)
+    return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
+  }
 
-  // exclusionShapes.forEach(function(exShape) {
-  //   console.log(exShape)
-  //   console.log('exclshp')
-  //   exclShapeCoords = []
-  //   exShape.forEach(function(coord) {
-  //     exclShapeCoords.push(new google.maps.LatLng(coord[0],coord[1]))
-  //   })
-
-  //   // Construct the polygon.
-  //   excludedDraw = new google.maps.Polygon({
-  //     paths: exclShapeCoords,
-  //     editable: true,
-  //     strokeWeight: 2,
-  //     fillColor: '#ff00ff',
-  //     fillOpacity: 0.7
-  //   });
-
-  //   excludedDraw.setMap(map);
-
-  // })
+  function arrayCoordPairs(point) {return [point.lat(), point.lng()] }
 
   google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
     mapCenter = map.center
     thing = event
     console.log(drawingManager.polygonOptions)
     bounds = thing.overlay.getBounds()
-    origin = bounds.getSouthWest()
+    localOrigin = bounds.getSouthWest()
     shapeLatLngs = event.overlay.getPaths().getArray()[0].getArray()
 
     shapeArr = []
     shapeCoordsArr = []
-
-    function arrayCoordPairs(point) {return [point.lat(), point.lng()] }
 
     shapeLatLngs.forEach(function(latLng){shapeArr.push(arrayCoordPairs(latLng))})
 
@@ -138,33 +123,9 @@ function initialize() {
       exclusionShapes.push(slarr['points'])
     };
 
-    function getXdistance(point) {
-      b = new google.maps.LatLng(origin.lat(), point.lng())
-      return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
-    }
 
-    function getYdistance(point) {
-      b = new google.maps.LatLng(point.lat(), origin.lng())
-      return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
-    }
 
-    function pointCoords(point) {
-      x = getXdistance(point)
-      y = getYdistance(point)
-      return [x, y]
-    }
-
-    function boundsXDist(bounds) {
-      b = new google.maps.LatLng(bounds.getSouthWest().ob, bounds.getNorthEast().pb)
-      return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
-    }
-
-    function boundsYDist(bounds) {
-      b = new google.maps.LatLng(bounds.getNorthEast().ob, bounds.getSouthWest().pb)
-      return google.maps.geometry.spherical.computeDistanceBetween(origin,b)
-    }
-
-    shapeLatLngs.forEach(function(latLng){shapeCoordsArr.push(pointCoords(latLng))})
+    shapeLatLngs.forEach(function(latLng){shapeCoordsArr.push(pointCoords(latLng, localOrigin))})
 
     console.log(JSON.stringify(shapes));
     $("#center").text('center of map: ' + mapCenter.toString())
