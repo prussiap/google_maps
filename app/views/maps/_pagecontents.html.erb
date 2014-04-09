@@ -2,12 +2,16 @@
   <%= @polystr %>
 <% end %>
 
-<input value="included space" type="button" onclick="layerName='includedSpace';
-                            drawingManager.polygonOptions.fillColor = '#ffff00';
-                            drawingManager.polygonOptions.fillOpacity = 0.15;"/>
-<input value="excluded space" type="button" onclick="layerName='exclusionSpace';
-                            drawingManager.polygonOptions.fillColor = '#ff00ff';
-                            drawingManager.polygonOptions.fillOpacity = 0.7;"/>
+<input value="draw roof plane" type="button" onclick="drawingManager.setMap(map);
+                            drawingManager2.setMap();
+                            drawingManager3Obstructioning.setMap();"/>
+<input value="draw obstruction" type="button" onclick="drawingManager.setMap();
+                            drawingManager2.setMap();
+                            drawingManager3Obstructioning.setMap(map);"/>
+
+<input value="slope direction ray" type="button" onclick="drawingManager.setMap();
+                            drawingManager2.setMap(map);
+                            drawingManager3Obstructioning.setMap();"/>
 
 <div style='width: 800px;'>
   <div id="mapspace" style='width: 800px; height: 400px;'></div>
@@ -21,6 +25,9 @@
 <div id="bounds">bounds: _</div>
 <div id="bounds-local">local bounds: _</div>
 <div id="local-coords">local coords: _</div>
+<div id="other-data">other params: _</div>
+<div>Roof slope: <input type="text" name="Roof Slope" id="slope" /></div>
+<div>Roof slope direction: <input type="text" name="Roof Slope Direction" id="slopeDirection" /></div>
 
 <script>
 
@@ -66,12 +73,49 @@ function initialize() {
       fillColor: '#ffff00',
       fillOpacity: 0.15,
       strokeWeight: 5,
-      clickable: false,
+      clickable: true,
       editable: true,
       zIndex: 1
     }
   });
   drawingManager.setMap(map);
+
+  drawingManager2 = new google.maps.drawing.DrawingManager({
+    drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_CENTER,
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYLINE
+      ]
+    },
+    polylineOptions: {
+      strokeColor: '#ff0000',
+      strokeWeight: 4,
+      clickable: true,
+      editable: true,
+      zIndex: 1
+    }
+  });
+
+  drawingManager3Obstructioning = new google.maps.drawing.DrawingManager({
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_CENTER,
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYGON
+      ]
+    },
+    polygonOptions: {
+      fillColor: '#ff0000',
+      fillOpacity: 0.35,
+      strokeWeight: 2,
+      clickable: true,
+      editable: true,
+      zIndex: 1
+    }
+  });
 
   function getXdistance(point, origin) {
     b = new google.maps.LatLng(origin.lat(), point.lng())
@@ -116,7 +160,7 @@ function initialize() {
 
     shapeLatLngs.forEach(function(latLng){shapeArr.push(arrayCoordPairs(latLng))})
 
-    slarr = {points:shapeArr,name:layerName}
+    slarr = {points:shapeArr,name:layerName,slope:$('#slope').val(),slopeDirection:$('#slopeDirection').val()}
     if (slarr['name'] == 'includedSpace') {
       shapes.push(slarr['points'])
     } else {
@@ -133,6 +177,10 @@ function initialize() {
     $("#bounds").text('bounds: ' + bounds);
     $("#bounds-local").text('local bounds: ' + boundsXDist(bounds) + ' meters by ' + boundsYDist(bounds) + ' meters');
     $("#local-coords").text('local coords: ' + JSON.stringify(shapeCoordsArr))
+    $("#other-data").text('other params: slope: ' + $('#slope').val() + " slope direction: " + $('#slopeDirection').val())
+
+    drawingManager.drawingMode = null
+    drawingManager.setMap(map)
 
     // TODO: ADD FORM FOR ADDITIONAL POLY INFO
     // $.post("/maps.js",{klag:JSON.stringify(shapes)},"json");
